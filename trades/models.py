@@ -1,6 +1,7 @@
 from django.db import models
+from django.conf import settings
 
-class Trade_History(models.Model):
+class History(models.Model):
 	EQUITY = 'EQ'
 	ASSET_TYPE_CHOICES = [
 		(EQUITY, 'Equity')
@@ -13,7 +14,7 @@ class Trade_History(models.Model):
 		(SELL, 'Sell')
 	]
 
-	user_id = models.ForeignKey('users.User', on_delete=models.CASCADE)
+	user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 	asset_type = models.CharField(max_length=2, choices=ASSET_TYPE_CHOICES)
 	symbol = models.CharField(max_length=10)
