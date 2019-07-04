@@ -22,7 +22,6 @@ class History(models.Model):
 	action = models.CharField(max_length=1, choices=ACTION_CHOICES)
 	quantity = models.IntegerField()
 	price = models.DecimalField(max_digits=10 ,decimal_places=2)
-	commission = models.DecimalField(max_digits=6 ,decimal_places=2)
 
 
 
