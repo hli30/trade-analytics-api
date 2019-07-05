@@ -2,6 +2,7 @@ from csv import reader
 from io import StringIO
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
 from .models import History
@@ -40,3 +41,8 @@ class TradeHistoryUploadView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class TradeHistoryListView(ListAPIView):
+    serializer_class = HistorySerializer
+
+    def get_queryset(self):
+        return History.objects.filter(user_id=self.request.user.id)
