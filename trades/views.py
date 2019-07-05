@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from django.db import transaction, IntegrityError
 
 from .models import History
 from .serializers import HistorySerializer
@@ -36,7 +37,12 @@ class TradeHistoryUploadView(APIView):
         serializer = HistorySerializer(data=data, many=True)
 
         if serializer.is_valid():
-            serializer.save(user_id=request.user.id)
+            try:    
+                with transaction.atomic():
+                    serializer.save(user_id=request.user.id)
+            except IntegrityError:
+                return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
